@@ -15,7 +15,7 @@ import java.util.Set;
 public class Author {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int authorId;
 
     @Column(name = "author_name", length = 100, nullable = false, unique = true)
@@ -24,7 +24,7 @@ public class Author {
     @Column(name = "description", length = 250, nullable = false)
     private String description;
 
-    @OneToOne(cascade = CascadeType.ALL)
+    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JoinColumn(name = "image_id")
     private FileData image;
 

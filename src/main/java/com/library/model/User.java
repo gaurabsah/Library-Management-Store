@@ -29,7 +29,7 @@ public class User {
 
     private String about;
 
-    @OneToOne(cascade = CascadeType.ALL)
+    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JoinColumn(name = "image_id")
     private FileData image;
 }

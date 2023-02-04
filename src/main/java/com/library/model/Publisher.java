@@ -15,13 +15,13 @@ import java.util.Set;
 public class Publisher {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int publisherId;
 
     @Column(name = "publisher_name", length = 100, nullable = false, unique = true)
     private String publisherName;
 
-    @OneToOne(cascade = CascadeType.ALL)
+    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JoinColumn(name = "image_id")
     private FileData image;
 
