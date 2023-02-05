@@ -32,4 +32,6 @@ public class User {
     @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JoinColumn(name = "image_id")
     private FileData image;
+
+    private String roles;
 }

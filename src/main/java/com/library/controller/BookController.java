@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -31,6 +32,7 @@ public class BookController {
     private FileService fileService;
 
     @PostMapping("/create")
+    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     public ResponseEntity<BookDTO> createBook(@Valid @RequestBody BookDTO bookDTO) {
         BookDTO newBook = bookService.createBook(bookDTO);
         logger.info("Book created: {}", newBook.getBookId());
@@ -38,6 +40,7 @@ public class BookController {
     }
 
     @PutMapping("/{bookId}/update")
+    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     public ResponseEntity<BookDTO> updateBook(@Valid @RequestBody BookDTO bookDTO, @PathVariable int bookId) {
         BookDTO updatedBook = bookService.updateBook(bookDTO, bookId);
         logger.info("Book updated: {}", updatedBook.getBookId());
@@ -45,6 +48,7 @@ public class BookController {
     }
 
     @GetMapping("/{bookId}")
+    @PreAuthorize("hasAuthority('ROLE_USER') or hasAuthority('ROLE_ADMIN')")
     public ResponseEntity<BookDTO> getBookById(@PathVariable int bookId) {
         BookDTO bookDTO = bookService.getBookById(bookId);
         logger.info("Book found: {}", bookDTO.getBookId());
@@ -52,6 +56,7 @@ public class BookController {
     }
 
     @GetMapping("/all")
+    @PreAuthorize("hasAuthority('ROLE_USER') or hasAuthority('ROLE_ADMIN')")
     public ResponseEntity<List<BookDTO>> getAllBooks() {
         List<BookDTO> books = bookService.getAllBooks();
         logger.info("Books found: {}", books.size());
@@ -59,6 +64,7 @@ public class BookController {
     }
 
     @DeleteMapping("/{bookId}")
+    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     public ResponseEntity<String> deleteBookById(@PathVariable int bookId) {
         bookService.deleteBookById(bookId);
         logger.info("Book deleted: {}", bookId);
@@ -66,6 +72,7 @@ public class BookController {
     }
 
     @GetMapping("/search/{bookName}")
+    @PreAuthorize("hasAuthority('ROLE_USER') or hasAuthority('ROLE_ADMIN')")
     public ResponseEntity<List<BookDTO>> getBookByBookName(@PathVariable String bookName) {
         List<BookDTO> bookDTO = bookService.getBookByBookName(bookName);
         logger.info("Book found: {}", bookDTO.size());
@@ -73,6 +80,7 @@ public class BookController {
     }
 
     @PostMapping("/uploadImage/{bookId}")
+    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     public ResponseEntity<ImageResponse> uploadImageToFIleSystem(@RequestParam("image") MultipartFile file, @PathVariable int bookId) throws IOException {
         FileDataDTO uploadImage = fileService.uploadImageToFileSystem(file);
         int id = uploadImage.getId();
@@ -88,6 +96,7 @@ public class BookController {
     }
 
     @GetMapping("/getImage/{fileName}")
+    @PreAuthorize("hasAuthority('ROLE_USER') or hasAuthority('ROLE_ADMIN')")
     public ResponseEntity<?> downloadImageFromFileSystem(@PathVariable String fileName) throws IOException {
         byte[] imageData = fileService.downloadImageFromFileSystem(fileName);
         logger.info("Image downloaded Successfully");

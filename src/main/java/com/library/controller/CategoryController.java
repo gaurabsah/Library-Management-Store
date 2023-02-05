@@ -8,6 +8,7 @@ import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -23,30 +24,35 @@ public class CategoryController {
     private BookService bookService;
 
     @PostMapping("/create")
+    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     public ResponseEntity<CategoryDTO> createCategory(@Valid @RequestBody CategoryDTO categoryDTO) {
         CategoryDTO category = categoryService.createCategory(categoryDTO);
         return new ResponseEntity<>(category, HttpStatus.CREATED);
     }
 
     @PutMapping("/update/{categoryId}")
+    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     public ResponseEntity<CategoryDTO> updateCategory(@Valid @RequestBody CategoryDTO categoryDto, @PathVariable int categoryId) {
         CategoryDTO updatedCategoryDto = categoryService.updateCategory(categoryDto, categoryId);
         return new ResponseEntity<>(updatedCategoryDto, HttpStatus.OK);
     }
 
     @DeleteMapping("/delete/{categoryId}")
+    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     public ResponseEntity<String> deleteCategory(@PathVariable int categoryId) {
         categoryService.deleteCategory(categoryId);
         return new ResponseEntity<>("Category deleted...", HttpStatus.OK);
     }
 
     @GetMapping("/get/{categoryId}")
+    @PreAuthorize("hasAuthority('ROLE_USER') or hasAuthority('ROLE_ADMIN')")
     public ResponseEntity<CategoryDTO> getCategory(@PathVariable int categoryId) {
         CategoryDTO categoryDto = categoryService.getCategory(categoryId);
         return new ResponseEntity<>(categoryDto, HttpStatus.OK);
     }
 
     @GetMapping("/getAll")
+    @PreAuthorize("hasAuthority('ROLE_USER') or hasAuthority('ROLE_ADMIN')")
     public ResponseEntity<List<CategoryDTO>> getAllCategories(
             @RequestParam(value = "pageNumber", defaultValue = "0", required = false) int pageNumber,
             @RequestParam(value = "pageSize", defaultValue = "10", required = false) int pageSize,
@@ -58,18 +64,21 @@ public class CategoryController {
     }
 
     @PostMapping("/{categoryId}/addBook")
+    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     public ResponseEntity<BookDTO> createBookWithCategory(@Valid @RequestBody BookDTO bookDTO, @PathVariable int categoryId) {
         BookDTO bookWithCategory = bookService.createBookWithCategory(bookDTO, categoryId);
         return new ResponseEntity<>(bookWithCategory, HttpStatus.CREATED);
     }
 
     @PutMapping("/{categoryId}/updateBook/{bookId}")
+    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     public ResponseEntity<BookDTO> updateBookWithCategory(@PathVariable int bookId, @PathVariable int categoryId) {
         BookDTO bookDTO = bookService.updateBookWithCategory(bookId, categoryId);
         return new ResponseEntity<>(bookDTO, HttpStatus.OK);
     }
 
     @GetMapping("/{categoryId}/getBook")
+    @PreAuthorize("hasAuthority('ROLE_USER') or hasAuthority('ROLE_ADMIN')")
     public ResponseEntity<List<BookDTO>> getAllBooksWithCategory(@PathVariable int categoryId) {
         List<BookDTO> bookByCategory = bookService.getBookByCategory(categoryId);
         return new ResponseEntity<>(bookByCategory, HttpStatus.OK);

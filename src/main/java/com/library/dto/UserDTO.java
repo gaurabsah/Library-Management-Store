@@ -33,4 +33,6 @@ public class UserDTO {
     private String about;
 
     private FileDataDTO image;
+
+    private String roles;
 }
