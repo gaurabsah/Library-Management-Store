@@ -1,4 +1,4 @@
-# Library-Management-Store
+# Library-Management-System
 
 Modules:-
 1. User
@@ -14,7 +14,7 @@ Features(tools & library):-
 4. Pagination/Sorting (used in category module)
 5. Bean Validation
 6. Mapping Relation (hibernate)
-7. Docker Image (coming soon)
+7. Docker Image
 8. Swagger
 9. Spring Boot 3.0
 10. Logger
